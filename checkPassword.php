@@ -1,28 +1,21 @@
 <?php
 session_start();
-
-// Set the correct password (in hashed format)
+//Hash of the password to enter the site will be stored in $correctPasswordHash
 $correctPasswordHash = '405f42005704da932ea8a4ad1f1e8c26e751af0316caa1e7e4bef4af4e2d93fe';
 
-// Check if the form has been submitted
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Get the password entered by the user
+  //Get the password entered by the user and calculate it's hash
     $password = $_POST['password'];
 
-    // Hash the password entered by the user
-    $passwordHash = hash('sha256', $password);
-
-    // Check if the password entered by the user matches the correct password hash
-    if ($passwordHash === $correctPasswordHash) {
-        // Set the authenticated session variable
+    if (hash('sha256', $password) == $correctPasswordHash) {
+        // If passwords match, authenticated is set to True and user is allowed to view the homepage
         $_SESSION['authenticated'] = true;
-
-        // Redirect to the next page
         header('Location: nextpage.php');
         exit;
     } else {
-        // Redirect back to the index page if the password is incorrect
-        header('Location: index.html');
+        echo("<script>alert('Wrong password. Please try again!')</script>");
+        echo("<script>window.location = 'index.html';</script>");
+        //header('Location: index.html');
         exit;
     }
 } else {
